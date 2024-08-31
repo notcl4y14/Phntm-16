@@ -1,4 +1,5 @@
 import Display from "./display.js";
+import Runner from "./runner.js";
 
 window.onload = () => {
 	const canvas = document.querySelector("canvas");
@@ -31,4 +32,25 @@ window.onresize = () => {
 	Display.canvas.style.top = `${top}px`
 	Display.canvas.style.width = `${canvasWidth * scale}px`
 	Display.canvas.style.height = `${canvasHeight * scale}px`
+}
+
+window.onkeydown = (key) => {
+	// console.log(key);
+
+	if (key.code[0] == "F") {
+		key.preventDefault();
+	}
+	
+	switch (key.code) {
+		case "F4":
+			Runner.paused ? Runner.start() : Runner.stop();
+			break;
+		case "F5":
+			Runner.stop();
+			const newFPS = prompt("FPS:");
+			const newUPS = prompt("UPS:");
+			Runner.targetFPS = newFPS;
+			Runner.targetUPS = newUPS;
+			break;
+	}
 }

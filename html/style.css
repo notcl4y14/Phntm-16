@@ -15,4 +15,5 @@ canvas {
 	height: 256px;
 	background-color: black;
 	image-rendering: pixelated;
+	shape-rendering: crispEdges;
 }
