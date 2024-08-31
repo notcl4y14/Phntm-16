@@ -1,10 +1,11 @@
-const { app, BrowserWindow } = require('electron/main')
-const path = require('node:path')
+const { app, BrowserWindow } = require('electron/main');
+const path = require('node:path');
 
 function createWindow() {
 	const config = {
 		width: 800,
-		height: 600
+		height: 600,
+		title: "Phntm-16"
 	};
 	const win = new BrowserWindow(config);
 

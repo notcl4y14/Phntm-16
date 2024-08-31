@@ -70,6 +70,7 @@ export default class Runner {
 
 			if (performance.now() - timer >= 1000) {
 				console.log("FPS: " + framesPerSecond + " | UPS: " + updatesPerSecond);
+				// console.log("FPS: " + framesPerSecond + " | UPS: " + updatesPerSecond + " | FDelta: " + frameDelta + " | UDelta: " + updateDelta);
 				updatesPerSecond = 0;
 				framesPerSecond = 0;
 				timer += 1000;
