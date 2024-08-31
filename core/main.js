@@ -1,3 +1,6 @@
+import Renderer from "../common/renderer/renderer.js";
+import Operation from "../common/renderer/operation.js";
+import OperationType from "../common/renderer/optype.js";
 import Display from "./display.js";
 import Runner from "./runner.js";
 
@@ -6,8 +9,20 @@ window.onload = () => {
 	Display.linkCanvas(canvas);
 	window.onresize();
 
-	Display.context.fillStyle = "#ffffff";
-	Display.context.fillText("Hello World!", 12, 12);
+	// Display.context.fillStyle = "#ffffff";
+	// Display.context.fillText("Hello World!", 12, 12);
+
+	let operations = [
+		new Operation( OperationType.Color, [ "#ffffff" ] ),
+		new Operation( OperationType.Clear, [ ] ),
+		new Operation( OperationType.Color, [ "#0000ff" ] ),
+		new Operation( OperationType.Rectangle, [ 10, 10, 20, 20 ] ),
+		new Operation( OperationType.Fill, [ ] ),
+	];
+
+	let renderer = new Renderer();
+	renderer.buffer = operations;
+	renderer.apply(Display.context);
 }
 
 window.onresize = () => {
