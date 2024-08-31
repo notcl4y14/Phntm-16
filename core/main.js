@@ -37,20 +37,31 @@ window.onresize = () => {
 window.onkeydown = (key) => {
 	// console.log(key);
 
-	if (key.code[0] == "F") {
+	if (key.code[0] == "F" || key.code == "Tab") {
 		key.preventDefault();
 	}
 	
 	switch (key.code) {
+		case "Tab":
+			Runner.speed = 10;
+			break;
 		case "F4":
 			Runner.paused ? Runner.start() : Runner.stop();
 			break;
-		case "F5":
-			Runner.stop();
-			const newFPS = prompt("FPS:");
-			const newUPS = prompt("UPS:");
-			Runner.targetFPS = newFPS;
-			Runner.targetUPS = newUPS;
+		// case "F5":
+		// 	Runner.stop();
+		// 	const newFPS = prompt("FPS:");
+		// 	const newUPS = prompt("UPS:");
+		// 	Runner.targetFPS = newFPS;
+		// 	Runner.targetUPS = newUPS;
+		// 	break;
+	}
+}
+
+window.onkeyup = (key) => {
+	switch (key.code) {
+		case "Tab":
+			Runner.speed = 1;
 			break;
 	}
 }

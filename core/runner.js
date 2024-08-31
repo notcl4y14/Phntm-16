@@ -8,6 +8,8 @@ export default class Runner {
 	static targetFPS = 60;
 	static targetUPS = 60;
 
+	static speed = 1;
+
 	static paused = true;
 
 	static update() {
@@ -49,17 +51,17 @@ export default class Runner {
 		while (!this.paused) {
 			const now = performance.now();
 			frameDelta += (now - lastTime) / frameTime;
-			updateDelta += (now - lastTime) / updateTime;
+			updateDelta += (now - lastTime) / (1000 / (this.targetUPS * this.speed));
 			lastTime = now;
 
-			if (updateDelta >= 1) {
+			while (updateDelta >= 1) {
 				Runner.update();
 				this.ticks += 1;
 				updatesPerSecond += 1;
 				updateDelta -= 1;
 			}
 
-			if (frameDelta >= 1) {
+			while (frameDelta >= 1) {
 				Runner.draw();
 				this.draws += 1;
 				framesPerSecond += 1;
