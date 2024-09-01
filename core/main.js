@@ -1,28 +1,29 @@
-import Renderer from "../common/renderer/renderer.js";
-import Operation from "../common/renderer/operation.js";
-import OperationType from "../common/renderer/optype.js";
+import Cartridge from "../common/cartridge.js";
 import Display from "./display.js";
 import Runner from "./runner.js";
+
+const cart = new Cartridge();
+
+const loadCart = (code) => {
+	cart.code = code;
+	const data = cart.run();
+
+	Runner.updateFunc = data.update;
+	Runner.drawFunc = data.draw;
+
+	Runner.ticks = 0;
+	Runner.draws = 0;
+
+	Runner.start();
+}
 
 window.onload = () => {
 	const canvas = document.querySelector("canvas");
 	Display.linkCanvas(canvas);
 	window.onresize();
 
-	// Display.context.fillStyle = "#ffffff";
-	// Display.context.fillText("Hello World!", 12, 12);
-
-	let operations = [
-		new Operation( OperationType.Color, [ "#ffffff" ] ),
-		new Operation( OperationType.Clear, [ ] ),
-		new Operation( OperationType.Color, [ "#0000ff" ] ),
-		new Operation( OperationType.Rectangle, [ 10, 10, 20, 20 ] ),
-		new Operation( OperationType.Fill, [ ] ),
-	];
-
-	let renderer = new Renderer();
-	renderer.buffer = operations;
-	renderer.apply(Display.context);
+	Display.context.fillStyle = "#ffffff";
+	Display.context.fillText("Hello World!", 12, 12);
 }
 
 window.onresize = () => {
@@ -47,6 +48,8 @@ window.onresize = () => {
 	Display.canvas.style.top = `${top}px`
 	Display.canvas.style.width = `${canvasWidth * scale}px`
 	Display.canvas.style.height = `${canvasHeight * scale}px`
+
+	// Display.context.imageSmoothingEnabled = false;
 }
 
 window.onkeydown = (key) => {
@@ -60,6 +63,20 @@ window.onkeydown = (key) => {
 			break;
 		case "F4":
 			Runner.paused ? Runner.start() : Runner.stop();
+			break;
+		case "F1":
+			const fileInput = document.getElementById("file");
+			const fileReader = new FileReader();
+
+			fileReader.onload = (event) => {
+				loadCart(event.target.result);
+			}
+
+			fileInput.onchange = (event) => {
+				fileReader.readAsText(event.target.files[0]);
+			}
+
+			fileInput.click();
 			break;
 	}
 }

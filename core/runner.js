@@ -1,5 +1,3 @@
-import Display from "./display.js";
-
 export default class Runner {
 
 	static draws = 0;
@@ -12,17 +10,17 @@ export default class Runner {
 
 	static paused = true;
 
+	static updateFunc = null;
+	static drawFunc = null;
+
 	static update() {
-		return;
+		if (this.updateFunc)
+			this.updateFunc();
 	}
 
 	static draw() {
-		Display.context.fillStyle = "#000000";
-		Display.context.fillRect(0, 0, Display.canvas.width, Display.canvas.height);
-
-		const size = Math.sin(this.ticks / 100) * 100;
-		Display.context.fillStyle = "#ffffff";
-		Display.context.fillRect(128, 128, size, size);
+		if (this.drawFunc)
+			this.drawFunc();
 	}
 	
 	static async start() {
