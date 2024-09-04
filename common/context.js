@@ -34,7 +34,7 @@ export class Context {
 	};
 	
 	static setColor (colorIndex) {
-		const color = this._colors[colorIndex];
+		const color = this._colors[colorIndex % 21];
 		const rgb = `rgb(${color[0]},${color[1]},${color[2]})`;
 		Display.context.fillStyle = rgb;
 		Display.context.strokeStyle = rgb;
@@ -59,10 +59,10 @@ export class Context {
 	static rectangle (x, y, width, height) {
 		Display.context.beginPath();
 		Display.context.rect(
-			Math.round(x),
-			Math.round(y),
-			Math.round(width),
-			Math.round(height)
+			x,
+			y,
+			width,
+			height
 		);
 		Display.context.closePath();
 	}

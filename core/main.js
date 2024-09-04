@@ -33,9 +33,6 @@ window.onresize = () => {
 	
 	const canvasWidth = 256;
 	const canvasHeight = 256;
-
-	Display.canvas.width = canvasWidth;
-	Display.canvas.height = canvasHeight;
 	
 	const width_scale = window.innerWidth / canvasWidth
 	const height_scale = window.innerHeight / canvasHeight
@@ -44,10 +41,17 @@ window.onresize = () => {
 	const left = centerWidth - (canvasWidth * scale) / 2;
 	const top = centerHeight - (canvasHeight * scale) / 2;
 
+	// Runner.scale = scale;
+
+	Display.canvas.width = canvasWidth * scale;
+	Display.canvas.height = canvasHeight * scale;
+
 	Display.canvas.style.left = `${left}px`
 	Display.canvas.style.top = `${top}px`
 	Display.canvas.style.width = `${canvasWidth * scale}px`
 	Display.canvas.style.height = `${canvasHeight * scale}px`
+
+	Display.context.scale(scale, scale);
 
 	// Display.context.imageSmoothingEnabled = false;
 }

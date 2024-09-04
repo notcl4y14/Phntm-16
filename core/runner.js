@@ -1,3 +1,5 @@
+import Display from "./display.js";
+
 export default class Runner {
 
 	static draws = 0;
@@ -7,6 +9,8 @@ export default class Runner {
 	static targetUPS = 60;
 
 	static speed = 1;
+
+	// static scale = 1;
 
 	static paused = true;
 
@@ -19,8 +23,13 @@ export default class Runner {
 	}
 
 	static draw() {
+		// Display.context.save();
+		// Display.context.scale(this.scale, this.scale);
+
 		if (this.drawFunc)
 			this.drawFunc();
+
+		// Display.context.restore();
 	}
 	
 	static async start() {
