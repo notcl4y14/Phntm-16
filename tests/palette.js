@@ -1,5 +1,5 @@
-const tileWidth = 256 / 10;
-const tileHeight = 256 / 10;
+const tileWidth = 256 / 5;
+const tileHeight = 256 / 5;
 
 function update() {
 	return;
@@ -13,7 +13,7 @@ function draw() {
 	context.rectangle(0, 0, 256, 256);
 
 	for (let i = 0; i <= 20; i++) {
-		if (i > 0 && i % 10 == 0) {
+		if (i > 0 && i % 5 == 0) {
 			x = 0;
 			y += 1;
 		}
