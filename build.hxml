@@ -1,0 +1,4 @@
+--class-path source
+--main phntm.js.Main
+
+--js build/html5/main.js
