@@ -2,7 +2,7 @@ package phntm.js;
 
 import js.Browser;
 
-class Canvas extends Element
+class Canvas extends ElementBuilder
 {
 	public function new () {}
 	public function build () : Void
