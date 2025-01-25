@@ -48,7 +48,7 @@ class Display
 	{
 		var index = -1;
 
-		while (++index < this.area)
+		while (++index < this.area * 4)
 		{
 			this.colors[index] = color[index % 4];
 		}

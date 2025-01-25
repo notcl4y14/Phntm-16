@@ -20,10 +20,22 @@ class Main
 		Browser.document.body.appendChild(canvas);
 
 		display = new Display(128, 128);
-		display.setColor(10, 10, [255, 255, 255, 255]);
-		display.setColor(11, 10, [255, 255, 255, 255]);
-		display.setColor(11, 11, [255, 255, 255, 255]);
-		display.setColor(10, 11, [255, 255, 255, 255]);
+		display.fill([255, 255, 255, 255]);
+
+		var displayDim = display.getSize();
+		
+		for (x in 0...displayDim[0])
+		{
+			for (y in 0...displayDim[1])
+			{
+				if ((x + y) % 2 == 0)
+				{
+					continue;
+				}
+
+				display.setColor(x, y, [25, 25, 25, 255]);
+			}
+		}
 
 		fitCanvasToWindow();
 		applyDisplay();
@@ -33,24 +45,19 @@ class Main
 	{
 		var displayDim = display.getSize();
 		var index = -1;
-		var imageData : js.html.ImageData = context.createImageData(displayDim[0], displayDim[1]);
+
+		var scaleX : Int = Std.int(canvas.width / displayDim[0]);
+		var scaleY : Int = Std.int(canvas.height / displayDim[1]);
 
 		while (++index < display.getArea())
 		{
-			var color : Array<Int> = display.getColor(
-				index % displayDim[0],
-				Std.int(index / displayDim[0])
-			);
+			var x : Int = index % displayDim[0];
+			var y : Int = Std.int(index / displayDim[0]);
+			var color : Array<Int> = display.getColor(x, y);
 
-			var pixelIndex = index * 4;
-			
-			imageData.data[pixelIndex] = color[0];
-			imageData.data[pixelIndex + 1] = color[1];
-			imageData.data[pixelIndex + 2] = color[2];
-			imageData.data[pixelIndex + 3] = color[3];
+			context.fillStyle = 'rgba(${color[0]}, ${color[1]}, ${color[2]}, ${color[3]})';
+			context.fillRect(x * scaleX, y * scaleY, scaleX, scaleY);
 		}
-
-		context.putImageData(imageData, 0, 0, 0, 0, canvas.width, canvas.height);
 	}
 
 	private static function fitCanvasToWindow ()
@@ -62,12 +69,19 @@ class Main
 		var left = Browser.window.innerWidth / 2 - (128 * scale) / 2;
 		var top = Browser.window.innerHeight / 2 - (128 * scale) / 2;
 
-		canvas.width = cast (128 * scale, Int);
-		canvas.height = cast (128 * scale, Int);
+		var width : Int = Std.int(128 * scale);
+		var height : Int = Std.int(128 * scale);
+
+		// Subtract by 1 if the width/height value is odd.
+		width = width - width % 2;
+		height = height - height % 2;
+
+		canvas.width = width;
+		canvas.height = height;
 
 		canvas.style.left = '${left}px';
 		canvas.style.top = '${top}px';
-		canvas.style.width = '${128 * scale}px';
-		canvas.style.height = '${128 * scale}px';
+		canvas.style.width = '${width}px';
+		canvas.style.height = '${height}px';
 	}
 }
