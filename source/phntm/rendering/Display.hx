@@ -24,33 +24,33 @@ class Display
 	public inline function getSize () : Array<Int>
 		return [this.width, this.height];
 
-	public function setColor (x : Int, y : Int, color : Array<Int>)
+	public function setColor (x : Int, y : Int, color : Color)
 	{
 		var index = (y * this.width + x) * 4;
-		this.colors[index] = color[0];
-		this.colors[index + 1] = color[1];
-		this.colors[index + 2] = color[2];
-		this.colors[index + 3] = color[3];
+		this.colors[index] = color.r;
+		this.colors[index + 1] = color.g;
+		this.colors[index + 2] = color.b;
+		this.colors[index + 3] = color.a;
 	}
 
-	public function getColor (x : Int, y : Int) : Array<Int>
+	public function getColor (x : Int, y : Int) : Color
 	{
 		var index = (y * this.width + x) * 4;
-		return [
+		return new Color(
 			this.colors[index],
 			this.colors[index + 1],
 			this.colors[index + 2],
 			this.colors[index + 3]
-		];
+		);
 	}
 
-	public function fill (color : Array<Int>)
+	public function fill (color : Color)
 	{
 		var index = -1;
 
 		while (++index < this.area * 4)
 		{
-			this.colors[index] = color[index % 4];
+			this.colors[index] = Color.getByIndex(color, index);
 		}
 	}
 }

@@ -20,7 +20,7 @@ class Main
 		Browser.document.body.appendChild(canvas);
 
 		display = new Display(128, 128);
-		display.fill([255, 255, 255, 255]);
+		display.fill(Color.WHITE);
 
 		var displayDim = display.getSize();
 		
@@ -33,7 +33,7 @@ class Main
 					continue;
 				}
 
-				display.setColor(x, y, [25, 25, 25, 255]);
+				display.setColor(x, y, new Color(25, 25, 25, 255));
 			}
 		}
 
@@ -53,9 +53,9 @@ class Main
 		{
 			var x : Int = index % displayDim[0];
 			var y : Int = Std.int(index / displayDim[0]);
-			var color : Array<Int> = display.getColor(x, y);
+			var color : Color = display.getColor(x, y);
 
-			context.fillStyle = 'rgba(${color[0]}, ${color[1]}, ${color[2]}, ${color[3]})';
+			context.fillStyle = 'rgba(${color.r}, ${color.g}, ${color.b}, ${color.a})';
 			context.fillRect(x * scaleX, y * scaleY, scaleX, scaleY);
 		}
 	}
