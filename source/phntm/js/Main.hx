@@ -2,6 +2,8 @@ package phntm.js;
 
 import js.Browser;
 import phntm.rendering.Display;
+import phntm.console.Console;
+import phntm.console.ConsoleCommand;
 
 class Main
 {
@@ -9,6 +11,7 @@ class Main
 	private static var context : js.html.CanvasRenderingContext2D;
 
 	private static var display : Display;
+	private static var console : Console;
 
 	public static function main () : Void
 	{
@@ -22,23 +25,71 @@ class Main
 		display = new Display(128, 128);
 		display.fill(Color.WHITE);
 
-		var displayDim = display.getSize();
-		
-		for (x in 0...displayDim[0])
-		{
-			for (y in 0...displayDim[1])
-			{
-				if ((x + y) % 2 == 0)
-				{
-					continue;
-				}
-
-				display.setColor(x, y, new Color(25, 25, 25, 255));
-			}
-		}
+		console = new Console();
+		console.code = [
+			ConsoleCommand.SET_VAR, 0xFF000000, 10,
+			ConsoleCommand.SET_VAR, 0xFF000001, 0,
+			ConsoleCommand.SET_PIXEL,
+			ConsoleCommand.REMOVE_VAR, 0xFF000000,
+			ConsoleCommand.REMOVE_VAR, 0xFF000001
+		];
 
 		fitCanvasToWindow();
+		runConsole();
 		applyDisplay();
+	}
+
+	private static function runConsole ()
+	{
+		var index = 0;
+
+		while (index < console.code.length)
+		{
+			var command : Int = console.code[index];
+
+			switch (command)
+			{
+				case 1:
+					var pos : Int = console.code[index + 1];
+					var value : Int = console.code[index + 2];
+
+					console.setVar(pos, value);
+
+					trace('set_var : $pos, $value');
+
+					index += 2;
+				
+				case 2:
+					var pos : Int = console.code[index + 1];
+
+					console.removeVar(pos);
+
+					trace('remove_var : $pos');
+
+					index += 1;
+				
+				case 3:
+					var pos : Int = console.vars.get(0xFF000000);
+					var color : Int = console.vars.get(0xFF000001);
+
+					trace("set_pixel");
+
+					var c : Color = Color.BLACK;
+
+					switch (color)
+					{
+						case 0:
+							c = Color.BLACK;
+						
+						case 1:
+							c = Color.WHITE;
+					}
+
+					display.setColorAtIndex(pos, c);
+			}
+
+			index++;
+		}
 	}
 
 	private static function applyDisplay ()

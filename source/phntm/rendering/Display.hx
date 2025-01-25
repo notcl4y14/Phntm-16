@@ -33,6 +33,15 @@ class Display
 		this.colors[index + 3] = color.a;
 	}
 
+	public function setColorAtIndex (index : Int, color : Color)
+	{
+		index = index * 4;
+		this.colors[index] = color.r;
+		this.colors[index + 1] = color.g;
+		this.colors[index + 2] = color.b;
+		this.colors[index + 3] = color.a;
+	}
+
 	public function getColor (x : Int, y : Int) : Color
 	{
 		var index = (y * this.width + x) * 4;
