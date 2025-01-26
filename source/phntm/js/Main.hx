@@ -4,6 +4,7 @@ import js.Browser;
 import phntm.rendering.Display;
 import phntm.console.Console;
 import phntm.console.ConsoleCommand;
+import phntm.console.ConsoleRunner;
 
 class Main
 {
@@ -26,13 +27,7 @@ class Main
 		display.fill(Color.WHITE);
 
 		console = new Console();
-		console.code = [
-			ConsoleCommand.SET_VAR, 0xFF000000, 10,
-			ConsoleCommand.SET_VAR, 0xFF000001, 0,
-			ConsoleCommand.SET_PIXEL,
-			ConsoleCommand.REMOVE_VAR, 0xFF000000,
-			ConsoleCommand.REMOVE_VAR, 0xFF000001
-		];
+		console.setCode([]);
 
 		fitCanvasToWindow();
 		runConsole();
@@ -41,55 +36,10 @@ class Main
 
 	private static function runConsole ()
 	{
-		var index = 0;
+		var runner : ConsoleRunner = new ConsoleRunner(console);
+		runner.display = display;
 
-		while (index < console.code.length)
-		{
-			var command : Int = console.code[index];
-
-			switch (command)
-			{
-				case 1:
-					var pos : Int = console.code[index + 1];
-					var value : Int = console.code[index + 2];
-
-					console.setVar(pos, value);
-
-					trace('set_var : $pos, $value');
-
-					index += 2;
-				
-				case 2:
-					var pos : Int = console.code[index + 1];
-
-					console.removeVar(pos);
-
-					trace('remove_var : $pos');
-
-					index += 1;
-				
-				case 3:
-					var pos : Int = console.vars.get(0xFF000000);
-					var color : Int = console.vars.get(0xFF000001);
-
-					trace("set_pixel");
-
-					var c : Color = Color.BLACK;
-
-					switch (color)
-					{
-						case 0:
-							c = Color.BLACK;
-						
-						case 1:
-							c = Color.WHITE;
-					}
-
-					display.setColorAtIndex(pos, c);
-			}
-
-			index++;
-		}
+		runner.run();
 	}
 
 	private static function applyDisplay ()
