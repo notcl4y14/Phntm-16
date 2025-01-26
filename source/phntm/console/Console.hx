@@ -2,30 +2,62 @@ package phntm.console;
 
 class Console
 {
-	public var code : Array<Int>;
-	public var vars : Map<Int, Int>;
+	private var _code : Array<Int>;
+	private var _vars : Map<Int, Int>;
+	private var _stack : Array<Int>;
 
-	public var codeLength : Int;
+	private var _lengthCode : Int;
+
+	public var code (get, null) : Array<Int>;
+	public var vars (get, null) : Map<Int, Int>;
+	public var stack (get, null) : Array<Int>;
+	public var lengthCode (get, null) : Int;
+
+	private inline function get_code () : Array<Int>
+		return _code;
+	private inline function get_vars () : Map<Int, Int>
+		return _vars;
+	private inline function get_stack () : Array<Int>
+		return _stack;
+	private inline function get_lengthCode () : Int
+		return _lengthCode;
 
 	public function new ()
 	{
-		this.code = new Array<Int>();
-		this.vars = new Map<Int, Int>();
+		_code  = new Array<Int>();
+		_vars  = new Map<Int, Int>();
+		_stack = new Array<Int>();
+		_lengthCode = 0;
 	}
 
-	public function setCode (code : Array<Int>)
+	public function bindCode (code : Array<Int>)
 	{
-		this.code = code;
-		this.codeLength = this.code.length;
+		_code = code;
+		_lengthCode = _code.length;
 	}
 
-	public function setVar (index : Int, value : Int)
+	public function varGet (index : Int) : Int
 	{
-		this.vars.set(index, value);
+		return _vars.get(index);
 	}
 
-	public function removeVar (index : Int)
+	public function varSet (index : Int, value : Int)
 	{
-		this.vars.remove(index);
+		_vars.set(index, value);
+	}
+
+	public function varDelete (index : Int)
+	{
+		_vars.remove(index);
+	}
+
+	public function stackPush (value : Int)
+	{
+		_stack.push(value);
+	}
+
+	public function stackPop () : Int
+	{
+		return _stack.pop();
 	}
 }

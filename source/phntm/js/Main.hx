@@ -27,11 +27,18 @@ class Main
 		display.fill(Color.WHITE);
 
 		console = new Console();
-		console.setCode([]);
+		console.bindCode([
+			ConsoleCommand.SET_VAR, ConsoleCommand.TYPE_INT, 0x00000000, ConsoleCommand.TYPE_INT, 10,
+			ConsoleCommand.SET_VAR, ConsoleCommand.TYPE_INT, 0x00000001, ConsoleCommand.TYPE_VAR, 0x00000000,
+			ConsoleCommand.OP_ADD, ConsoleCommand.TYPE_INT, 0x00000001, ConsoleCommand.TYPE_INT, 5,
+			ConsoleCommand.OP_DIV, ConsoleCommand.TYPE_INT, 0x00000001, ConsoleCommand.TYPE_INT, 5
+		]);
 
 		fitCanvasToWindow();
 		runConsole();
 		applyDisplay();
+
+		trace(console.vars);
 	}
 
 	private static function runConsole ()
