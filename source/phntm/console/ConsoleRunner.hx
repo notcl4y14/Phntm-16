@@ -15,11 +15,6 @@ class ConsoleRunner
 		this.console = console;
 	}
 
-	private function getCommand (delta : Int = 0)
-	{
-		return console.code[position + delta];
-	}
-
 	private function step (delta : Int = 1)
 	{
 		position += delta;
@@ -36,86 +31,69 @@ class ConsoleRunner
 
 	private function runCommand ()
 	{
-		var command : Int = console.code[position];
+		var command : Int = console.code.at(position);
 
 		switch (command)
 		{
 			case ConsoleCommand.MOVE:
-				var delta : Int = getCommand(1);
+				var delta : Int = console.code.at(position + 1);
 				step(delta);
 
 			case ConsoleCommand.SET_VAR:
-				var varID : Int = console.code[position + 1];
-				var varValue : Int = console.code[position + 2];
-				
 				step();
-				varID = getValue();
-				varValue = getValue();
+				var varID : Int = getValue();
+				var varValue : Int = getValue();
 
-				console.varSet( varID, varValue );
+				console.vars.set( varID, varValue );
 				step(-1);
 
 			case ConsoleCommand.REMOVE_VAR:
-				var varID : Int = console.code[position + 1];
-				
 				step();
-				varID = getValue();
+				var varID : Int = getValue();
 
-				console.varDelete( varID );
+				console.vars.delete( varID );
 				step(-1);
 			
 			case ConsoleCommand.STACK_PUSH:
-				var value : Int = console.code[position + 1];
-				
 				step();
-				value = getValue();
+				var value : Int = getValue();
 
-				console.stackPush( value );
+				console.stack.push( value );
 				step(-1);
 			
 			case ConsoleCommand.STACK_POP:
-				var varID : Int = console.code[position + 1];
-				
 				step();
-				varID = getValue();
+				var varID : Int = getValue();
 
-				console.varSet( varID, console.stackPop() );
+				console.vars.set( varID, console.stack.pop() );
 				step(-1);
 			
 			case ConsoleCommand.OP_ADD|ConsoleCommand.OP_SUB|ConsoleCommand.OP_MUL|ConsoleCommand.OP_DIV|ConsoleCommand.OP_POW:
-				var v1 : Int = console.code[position + 1];
-				var v2 : Int = console.code[position + 2];
-				
 				step();
-				v1 = getValue();
-				v2 = getValue();
+				var v1 : Int = getValue();
+				var v2 : Int = getValue();
 
-				var value = 0;
+				var varID : Int = v1;
+				v1 = console.vars.get(v1);
+
+				var value : Int = null;
 
 				switch (command)
 				{
-					case ConsoleCommand.OP_ADD:
-						value = console.varGet(v1) + v2;
-					case ConsoleCommand.OP_SUB:
-						value = console.varGet(v1) - v2;
-					case ConsoleCommand.OP_MUL:
-						value = console.varGet(v1) * v2;
-					case ConsoleCommand.OP_DIV:
-						value = Std.int(console.varGet(v1) / v2);
-					case ConsoleCommand.OP_POW:
-						value = console.varGet(v1) % v2;
+					case ConsoleCommand.OP_ADD: value = v1 + v2;
+					case ConsoleCommand.OP_SUB: value = v1 - v2;
+					case ConsoleCommand.OP_MUL: value = v1 * v2;
+					case ConsoleCommand.OP_DIV: value = Std.int(v1 / v2);
+					case ConsoleCommand.OP_POW: value = v1 % v2;
 				}
 				
-				console.varSet(v1, value);
+				console.vars.set(varID, value);
 				step(-1);
 			
 			case ConsoleCommand.SET_PIXEL:
-				var pixelIndex : Int = console.code[position + 1];
-				var pixelColor : Int = console.code[position + 2];
-				
 				step();
-				pixelIndex = getValue();
-				pixelColor = getValue();
+				var pixelIndex : Int = getValue();
+				var pixelColor : Int = getValue();
 
 				var c : Color = Color.BLACK;
 
@@ -137,15 +115,15 @@ class ConsoleRunner
 	{
 		var value = null;
 
-		switch (console.code[position])
+		switch (console.code.at(position))
 		{
 			case ConsoleCommand.TYPE_VAR:
-				var varID = console.code[position + 1];
-				value = console.varGet(varID);
+				var varID = console.code.at(position + 1);
+				value = console.vars.get(varID);
 				step(2);
 			
 			case ConsoleCommand.TYPE_INT:
-				value = console.code[position + 1];
+				value = console.code.at(position + 1);
 				step(2);
 		}
 
