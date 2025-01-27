@@ -1,5 +1,8 @@
 package phntm.js;
 
+import phntm.vm.OpCode;
+import phntm.vm.Runner;
+import phntm.vm.PhntmVM;
 import js.Browser;
 import phntm.rendering.Display;
 import phntm.console.Console;
@@ -13,7 +16,8 @@ class Main
 	private static var context : js.html.CanvasRenderingContext2D;
 
 	private static var display : Display;
-	private static var console : Console;
+	private static var console : PhntmVM;
+	// private static var console : Console;
 
 	public static function main () : Void
 	{
@@ -27,49 +31,60 @@ class Main
 		display = new Display(128, 128);
 		display.fill(Color.WHITE);
 
-		console = new Console();
-		console.code.loadSection("main", new ConsoleBlock([
-			ConsoleCommand.SET_PIXEL, ConsoleCommand.TYPE_INT, 0, ConsoleCommand.TYPE_INT, 0,
-			ConsoleCommand.SET_PIXEL, ConsoleCommand.TYPE_INT, 1, ConsoleCommand.TYPE_INT, 1,
-			ConsoleCommand.SET_PIXEL, ConsoleCommand.TYPE_INT, 2, ConsoleCommand.TYPE_INT, 2,
-			ConsoleCommand.SET_PIXEL, ConsoleCommand.TYPE_INT, 3, ConsoleCommand.TYPE_INT, 3,
+		console = new PhntmVM(0xffff);
+		console.memory.fill(0, console.memory.size, 0x0);
 
-			ConsoleCommand.SET_PIXEL, ConsoleCommand.TYPE_INT, (0 + 1 * 128), ConsoleCommand.TYPE_INT, 4,
-			ConsoleCommand.SET_PIXEL, ConsoleCommand.TYPE_INT, (1 + 1 * 128), ConsoleCommand.TYPE_INT, 5,
-			ConsoleCommand.SET_PIXEL, ConsoleCommand.TYPE_INT, (2 + 1 * 128), ConsoleCommand.TYPE_INT, 6,
-			ConsoleCommand.SET_PIXEL, ConsoleCommand.TYPE_INT, (3 + 1 * 128), ConsoleCommand.TYPE_INT, 7,
+		console.memory.poke(0x8000, OpCode.JUMP);
+		console.memory.poke(0x8001, 97);
+		console.memory.poke(0x8002, 0x0);
+		console.memory.poke(0x8003, 0x0);
 
-			ConsoleCommand.SET_PIXEL, ConsoleCommand.TYPE_INT, (0 + 2 * 128), ConsoleCommand.TYPE_INT, 8,
-			ConsoleCommand.SET_PIXEL, ConsoleCommand.TYPE_INT, (1 + 2 * 128), ConsoleCommand.TYPE_INT, 9,
-			ConsoleCommand.SET_PIXEL, ConsoleCommand.TYPE_INT, (2 + 2 * 128), ConsoleCommand.TYPE_INT, 10,
-			ConsoleCommand.SET_PIXEL, ConsoleCommand.TYPE_INT, (3 + 2 * 128), ConsoleCommand.TYPE_INT, 11,
+		console.memory.poke(0x8004, OpCode.SECTION);
+		console.memory.poke(0x8005, 97);
+		console.memory.poke(0x8006, 0x0);
+		console.memory.poke(0x8007, 0x0);
+		
+		console.memory.poke(0x8008, OpCode.PUSH);
+		console.memory.poke(0x8009, 0x0);
+		console.memory.poke(0x800a, 0x1);
+		console.memory.poke(0x800b, 0x0);
+		console.memory.poke(0x800c, OpCode.PUSH);
+		console.memory.poke(0x800d, 0x0);
+		console.memory.poke(0x800e, 0x1);
+		console.memory.poke(0x800f, 0x0);
+		console.memory.poke(0x8010, OpCode.SYSCALL);
+		console.memory.poke(0x8011, 0x0);
+		console.memory.poke(0x8012, 0x0);
+		console.memory.poke(0x8013, 0x0);
 
-			ConsoleCommand.SET_PIXEL, ConsoleCommand.TYPE_INT, (0 + 3 * 128), ConsoleCommand.TYPE_INT, 12,
-			ConsoleCommand.SET_PIXEL, ConsoleCommand.TYPE_INT, (1 + 3 * 128), ConsoleCommand.TYPE_INT, 13,
-			ConsoleCommand.SET_PIXEL, ConsoleCommand.TYPE_INT, (2 + 3 * 128), ConsoleCommand.TYPE_INT, 14,
-			ConsoleCommand.SET_PIXEL, ConsoleCommand.TYPE_INT, (3 + 3 * 128), ConsoleCommand.TYPE_INT, 15,
+		console.memory.poke(0x8014, OpCode.ADD);
+		console.memory.poke(0x8015, 0x0);
+		console.memory.poke(0x8016, 1);
+		console.memory.poke(0x8017, 0x0);
 
-			ConsoleCommand.SET_VAR, ConsoleCommand.TYPE_INT, 0x00000000, ConsoleCommand.TYPE_INT, 10,
-			ConsoleCommand.MOVE_EQ, ConsoleCommand.TYPE_IDENT, 97, ConsoleCommand.BREAK, ConsoleCommand.TYPE_VAR, 0x00000000, ConsoleCommand.TYPE_INT, 10,
-		]));
-		console.code.loadSection("a", new ConsoleBlock([
-			ConsoleCommand.SET_PIXEL, ConsoleCommand.TYPE_INT, 10, ConsoleCommand.TYPE_INT, 0,
-		]));
+		console.memory.poke(0x8018, OpCode.JUMPNEQ);
+		console.memory.poke(0x8019, 97);
+		console.memory.poke(0x801a, 0x0);
+		console.memory.poke(0x801b, 128 * 128);
+
+		var runner = new Runner(0x8000, 0xffff, console.memory);
+		runner.display = display;
+		runner.process();
+		runner.run();
+
+		trace(runner);
 
 		fitCanvasToWindow();
-		runConsole();
 		applyDisplay();
-
-		trace(console.vars);
 	}
 
 	private static function runConsole ()
 	{
-		var runner : ConsoleRunner = new ConsoleRunner(console);
-		runner.display = display;
-		runner.section = console.code.get("main");
+		// var runner : ConsoleRunner = new ConsoleRunner(console);
+		// runner.display = display;
+		// runner.section = console.code.get("main");
 
-		runner.run();
+		// runner.run();
 	}
 
 	private static function applyDisplay ()
