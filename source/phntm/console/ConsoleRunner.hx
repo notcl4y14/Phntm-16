@@ -82,6 +82,33 @@ class ConsoleRunner
 				console.vars.set( varID, console.stack.pop() );
 				step(-1);
 			
+			case ConsoleCommand.MOVE_EQ|ConsoleCommand.MOVE_NEQ:
+				step();
+				var _section : String = getValue();
+				var v1 : Any = getValue();
+				var v2 : Any = getValue();
+
+				step(-1);
+
+				switch (command)
+				{
+					case ConsoleCommand.MOVE_EQ:
+						if (v1 == v2)
+						{
+							section = console.code.get(_section);
+							position = 0;
+							return true;
+						}
+					
+					case ConsoleCommand.MOVE_NEQ:
+						if (v1 != v2)
+						{
+							section = console.code.get(_section);
+							position = 0;
+							return true;
+						}
+				}
+			
 			case ConsoleCommand.OP_ADD|ConsoleCommand.OP_SUB|ConsoleCommand.OP_MUL|ConsoleCommand.OP_DIV|ConsoleCommand.OP_POW:
 				step();
 				var v1 : Int = getValue();

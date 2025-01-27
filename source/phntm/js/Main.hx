@@ -48,6 +48,12 @@ class Main
 			ConsoleCommand.SET_PIXEL, ConsoleCommand.TYPE_INT, (1 + 3 * 128), ConsoleCommand.TYPE_INT, 13,
 			ConsoleCommand.SET_PIXEL, ConsoleCommand.TYPE_INT, (2 + 3 * 128), ConsoleCommand.TYPE_INT, 14,
 			ConsoleCommand.SET_PIXEL, ConsoleCommand.TYPE_INT, (3 + 3 * 128), ConsoleCommand.TYPE_INT, 15,
+
+			ConsoleCommand.SET_VAR, ConsoleCommand.TYPE_INT, 0x00000000, ConsoleCommand.TYPE_INT, 10,
+			ConsoleCommand.MOVE_EQ, ConsoleCommand.TYPE_IDENT, 97, ConsoleCommand.BREAK, ConsoleCommand.TYPE_VAR, 0x00000000, ConsoleCommand.TYPE_INT, 10,
+		]));
+		console.code.loadSection("a", new ConsoleBlock([
+			ConsoleCommand.SET_PIXEL, ConsoleCommand.TYPE_INT, 10, ConsoleCommand.TYPE_INT, 0,
 		]));
 
 		fitCanvasToWindow();

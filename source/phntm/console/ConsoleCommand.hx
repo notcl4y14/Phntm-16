@@ -8,6 +8,8 @@ class ConsoleCommand
 	public static var REMOVE_VAR (default, never) : Int = 0x00000003;
 	public static var STACK_PUSH (default, never) : Int = 0x00000004;
 	public static var STACK_POP (default, never)  : Int = 0x00000005;
+	public static var MOVE_EQ (default, never)    : Int = 0x00000010;
+	public static var MOVE_NEQ (default, never)   : Int = 0x00000010;
 	public static var TYPE_NULL (default, never)  : Int = 0x00001000;
 	public static var TYPE_VAR (default, never)   : Int = 0x00001001;
 	public static var TYPE_INT (default, never)   : Int = 0x00001002;
