@@ -29,16 +29,25 @@ class Main
 
 		console = new Console();
 		console.code.loadSection("main", new ConsoleBlock([
-			ConsoleCommand.SET_VAR, ConsoleCommand.TYPE_INT, 0x00000000, ConsoleCommand.TYPE_INT, 10,
-			ConsoleCommand.SET_VAR, ConsoleCommand.TYPE_INT, 0x00000001, ConsoleCommand.TYPE_VAR, 0x00000000,
-			ConsoleCommand.OP_ADD, ConsoleCommand.TYPE_INT, 0x00000001, ConsoleCommand.TYPE_INT, 5,
-			ConsoleCommand.OP_DIV, ConsoleCommand.TYPE_INT, 0x00000001, ConsoleCommand.TYPE_INT, 5,
+			ConsoleCommand.SET_PIXEL, ConsoleCommand.TYPE_INT, 0, ConsoleCommand.TYPE_INT, 0,
+			ConsoleCommand.SET_PIXEL, ConsoleCommand.TYPE_INT, 1, ConsoleCommand.TYPE_INT, 1,
+			ConsoleCommand.SET_PIXEL, ConsoleCommand.TYPE_INT, 2, ConsoleCommand.TYPE_INT, 2,
+			ConsoleCommand.SET_PIXEL, ConsoleCommand.TYPE_INT, 3, ConsoleCommand.TYPE_INT, 3,
 
-			ConsoleCommand.SET_PIXEL, ConsoleCommand.TYPE_VAR, 0x00000001, ConsoleCommand.TYPE_INT, 0,
-			ConsoleCommand.MOVE, ConsoleCommand.TYPE_IDENT, 97, ConsoleCommand.BREAK, ConsoleCommand.TYPE_INT, 0
-		]));
-		console.code.loadSection("a", new ConsoleBlock([
-			ConsoleCommand.SET_PIXEL, ConsoleCommand.TYPE_INT, 20, ConsoleCommand.TYPE_INT, 0
+			ConsoleCommand.SET_PIXEL, ConsoleCommand.TYPE_INT, (0 + 1 * 128), ConsoleCommand.TYPE_INT, 4,
+			ConsoleCommand.SET_PIXEL, ConsoleCommand.TYPE_INT, (1 + 1 * 128), ConsoleCommand.TYPE_INT, 5,
+			ConsoleCommand.SET_PIXEL, ConsoleCommand.TYPE_INT, (2 + 1 * 128), ConsoleCommand.TYPE_INT, 6,
+			ConsoleCommand.SET_PIXEL, ConsoleCommand.TYPE_INT, (3 + 1 * 128), ConsoleCommand.TYPE_INT, 7,
+
+			ConsoleCommand.SET_PIXEL, ConsoleCommand.TYPE_INT, (0 + 2 * 128), ConsoleCommand.TYPE_INT, 8,
+			ConsoleCommand.SET_PIXEL, ConsoleCommand.TYPE_INT, (1 + 2 * 128), ConsoleCommand.TYPE_INT, 9,
+			ConsoleCommand.SET_PIXEL, ConsoleCommand.TYPE_INT, (2 + 2 * 128), ConsoleCommand.TYPE_INT, 10,
+			ConsoleCommand.SET_PIXEL, ConsoleCommand.TYPE_INT, (3 + 2 * 128), ConsoleCommand.TYPE_INT, 11,
+
+			ConsoleCommand.SET_PIXEL, ConsoleCommand.TYPE_INT, (0 + 3 * 128), ConsoleCommand.TYPE_INT, 12,
+			ConsoleCommand.SET_PIXEL, ConsoleCommand.TYPE_INT, (1 + 3 * 128), ConsoleCommand.TYPE_INT, 13,
+			ConsoleCommand.SET_PIXEL, ConsoleCommand.TYPE_INT, (2 + 3 * 128), ConsoleCommand.TYPE_INT, 14,
+			ConsoleCommand.SET_PIXEL, ConsoleCommand.TYPE_INT, (3 + 3 * 128), ConsoleCommand.TYPE_INT, 15,
 		]));
 
 		fitCanvasToWindow();
