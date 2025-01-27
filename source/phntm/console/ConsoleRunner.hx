@@ -6,6 +6,8 @@ class ConsoleRunner
 {
 	private var position : Int;
 	private var console : Console;
+
+	public var section : ConsoleBlock;
 	
 	public var display : Display;
 
@@ -22,22 +24,34 @@ class ConsoleRunner
 
 	public function run ()
 	{
-		while (position < console.lengthCode)
+		while (position < section.length)
 		{
-			runCommand();
+			var restart = runCommand();
+
+			if (restart)
+			{
+				run();
+				break;
+			}
+			
 			step();
 		}
 	}
 
-	private function runCommand ()
+	private function runCommand () : Bool
 	{
-		var command : Int = console.code.at(position);
+		var command : Int = section.at(position);
 
 		switch (command)
 		{
 			case ConsoleCommand.MOVE:
-				var delta : Int = console.code.at(position + 1);
-				step(delta);
+				step();
+				var _section : String = getValue();
+				var _position : Int = getValue();
+
+				section = console.code.get(_section);
+				position = _position;
+				return true;
 
 			case ConsoleCommand.SET_VAR:
 				step();
@@ -95,36 +109,47 @@ class ConsoleRunner
 				var pixelIndex : Int = getValue();
 				var pixelColor : Int = getValue();
 
-				var c : Color = Color.BLACK;
-
-				switch (pixelColor)
-				{
-					case 0:
-						c = Color.BLACK;
-					
-					case 1:
-						c = Color.WHITE;
-				}
+				var c : Color = Color.getColorByID(pixelColor);
 
 				display.setColorAtIndex(pixelIndex, c);
 				step(-1);
 		}
+
+		return false;
 	}
 
-	private function getValue () : Int
+	private function getValue () : Any
 	{
-		var value = null;
+		var value : Any = null;
 
-		switch (console.code.at(position))
+		switch (section.at(position))
 		{
 			case ConsoleCommand.TYPE_VAR:
-				var varID = console.code.at(position + 1);
+				var varID = section.at(position + 1);
 				value = console.vars.get(varID);
 				step(2);
 			
 			case ConsoleCommand.TYPE_INT:
-				value = console.code.at(position + 1);
+				value = section.at(position + 1);
 				step(2);
+			
+			case ConsoleCommand.TYPE_IDENT:
+				var ident : String = "";
+
+				while (position < section.length)
+				{
+					step();
+
+					if (section.at(position) == ConsoleCommand.BREAK)
+					{
+						break;
+					}
+
+					ident = ident + String.fromCharCode(section.at(position));
+				}
+				
+				value = ident;
+				step();
 		}
 
 		return value;

@@ -29,4 +29,14 @@ class Color
 			default: return 0;
 		}
 	}
+
+	public static function getColorByID (id : Int) : Color
+	{
+		switch (id % 2)
+		{
+			case 0: return Color.BLACK;
+			case 1: return Color.WHITE;
+			default: return Color.BLACK;
+		}
+	}
 }

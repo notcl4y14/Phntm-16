@@ -3,6 +3,7 @@ package phntm.js;
 import js.Browser;
 import phntm.rendering.Display;
 import phntm.console.Console;
+import phntm.console.ConsoleBlock;
 import phntm.console.ConsoleCommand;
 import phntm.console.ConsoleRunner;
 
@@ -27,14 +28,18 @@ class Main
 		display.fill(Color.WHITE);
 
 		console = new Console();
-		console.bindCode([
+		console.code.loadSection("main", new ConsoleBlock([
 			ConsoleCommand.SET_VAR, ConsoleCommand.TYPE_INT, 0x00000000, ConsoleCommand.TYPE_INT, 10,
 			ConsoleCommand.SET_VAR, ConsoleCommand.TYPE_INT, 0x00000001, ConsoleCommand.TYPE_VAR, 0x00000000,
 			ConsoleCommand.OP_ADD, ConsoleCommand.TYPE_INT, 0x00000001, ConsoleCommand.TYPE_INT, 5,
 			ConsoleCommand.OP_DIV, ConsoleCommand.TYPE_INT, 0x00000001, ConsoleCommand.TYPE_INT, 5,
 
-			ConsoleCommand.SET_PIXEL, ConsoleCommand.TYPE_VAR, 0x00000001, ConsoleCommand.TYPE_INT, 0
-		]);
+			ConsoleCommand.SET_PIXEL, ConsoleCommand.TYPE_VAR, 0x00000001, ConsoleCommand.TYPE_INT, 0,
+			ConsoleCommand.MOVE, ConsoleCommand.TYPE_IDENT, 97, ConsoleCommand.BREAK, ConsoleCommand.TYPE_INT, 0
+		]));
+		console.code.loadSection("a", new ConsoleBlock([
+			ConsoleCommand.SET_PIXEL, ConsoleCommand.TYPE_INT, 20, ConsoleCommand.TYPE_INT, 0
+		]));
 
 		fitCanvasToWindow();
 		runConsole();
@@ -47,6 +52,7 @@ class Main
 	{
 		var runner : ConsoleRunner = new ConsoleRunner(console);
 		runner.display = display;
+		runner.section = console.code.get("main");
 
 		runner.run();
 	}

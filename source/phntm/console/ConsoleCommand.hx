@@ -11,6 +11,7 @@ class ConsoleCommand
 	public static var TYPE_NULL (default, never)  : Int = 0x00001000;
 	public static var TYPE_VAR (default, never)   : Int = 0x00001001;
 	public static var TYPE_INT (default, never)   : Int = 0x00001002;
+	public static var TYPE_IDENT (default, never) : Int = 0x00001003;
 	public static var OP_ADD (default, never)     : Int = 0x00002000;
 	public static var OP_SUB (default, never)     : Int = 0x00002001;
 	public static var OP_MUL (default, never)     : Int = 0x00002002;

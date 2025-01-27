@@ -2,35 +2,24 @@ package phntm.console;
 
 class ConsoleCode
 {
-	private var d : Array<Int>;
-	private var l : Int;
+	private var d : Map<String, ConsoleBlock>;
 
-	public var data (get, set) : Array<Int>;
-	public var length (get, null) : Int;
+	public var data (get, null) : Map<String, ConsoleBlock>;
 
-	private inline function set_data (v) : Array<Int>
-	{
-		setData(v);
-		return v;
-	}
-
-	private inline function get_data () : Array<Int> return d;
-	private inline function get_length () : Int return l;
+	private inline function get_data () : Map<String, ConsoleBlock> return d;
 
 	public function new ()
 	{
-		d = new Array<Int>();
-		length = 0;
+		d = new Map<String, ConsoleBlock>();
 	}
 
-	public function setData (data : Array<Int>)
+	public function loadSection (name : String, data : ConsoleBlock)
 	{
-		d = data;
-		l = d.length;
+		d.set(name, data);
 	}
 
-	public function at (position : Int)
+	public function get (name : String)
 	{
-		return d[position];
+		return d.get(name);
 	}
 }
