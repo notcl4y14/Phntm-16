@@ -1,5 +1,6 @@
 package phntm.js;
 
+import phntm.vm.CodeBuilder;
 import phntm.vm.OpCode;
 import phntm.vm.Runner;
 import phntm.vm.PhntmVM;
@@ -34,39 +35,20 @@ class Main
 		console = new PhntmVM(0xffff);
 		console.memory.fill(0, console.memory.size, 0x0);
 
-		console.memory.poke(0x8000, OpCode.JUMP);
-		console.memory.poke(0x8001, 97);
-		console.memory.poke(0x8002, 0x0);
-		console.memory.poke(0x8003, 0x0);
+		var codeBuilder : CodeBuilder = new CodeBuilder();
 
-		console.memory.poke(0x8004, OpCode.SECTION);
-		console.memory.poke(0x8005, 97);
-		console.memory.poke(0x8006, 0x0);
-		console.memory.poke(0x8007, 0x0);
+		codeBuilder.add(OpCode.JUMP, 97, 0, 0);
+
+		codeBuilder.add(OpCode.SECTION, 97, 0, 0);
+		codeBuilder.add(OpCode.PUSH, 0x000000, 1, 0);
+		codeBuilder.add(OpCode.PUSH, 0x000000, 1, 0);
+		codeBuilder.add(OpCode.SYSCALL, 0x00, 0, 0);
 		
-		console.memory.poke(0x8008, OpCode.PUSH);
-		console.memory.poke(0x8009, 0x0);
-		console.memory.poke(0x800a, 0x1);
-		console.memory.poke(0x800b, 0x0);
-		console.memory.poke(0x800c, OpCode.PUSH);
-		console.memory.poke(0x800d, 0x0);
-		console.memory.poke(0x800e, 0x1);
-		console.memory.poke(0x800f, 0x0);
-		console.memory.poke(0x8010, OpCode.SYSCALL);
-		console.memory.poke(0x8011, 0x0);
-		console.memory.poke(0x8012, 0x0);
-		console.memory.poke(0x8013, 0x0);
+		codeBuilder.add(OpCode.ADD, 0x000000, 3, 0);
+		codeBuilder.add(OpCode.JUMPLE, 97, 0, 128 * 128);
 
-		console.memory.poke(0x8014, OpCode.ADD);
-		console.memory.poke(0x8015, 0x0);
-		console.memory.poke(0x8016, 3);
-		console.memory.poke(0x8017, 0x0);
-
-		console.memory.poke(0x8018, OpCode.JUMPLE);
-		console.memory.poke(0x8019, 97);
-		console.memory.poke(0x801a, 0x0);
-		console.memory.poke(0x801b, 128 * 128);
-
+		codeBuilder.put(console.memory.data, 0x8000);
+		
 		var runner = new Runner(0x8000, 0xffff, console.memory);
 		runner.display = display;
 		runner.process();
