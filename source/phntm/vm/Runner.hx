@@ -109,7 +109,7 @@ class Runner
 						display.setColorAtIndex(index, Color.getColorByID(color));
 				}
 			
-			case OpCode.ADD|OpCode.SUB:
+			case OpCode.ADD|OpCode.SUB|OpCode.MUL|OpCode.DIV:
 				var position = _memory.peek(_position + 1);
 				var v2 = _memory.peek(_position + 2);
 
@@ -119,6 +119,8 @@ class Runner
 				{
 					case OpCode.ADD: v1 = v1 + v2;
 					case OpCode.SUB: v1 = v1 - v2;
+					case OpCode.MUL: v1 = v1 * v2;
+					case OpCode.DIV: v1 = Std.int(v1 / v2);
 				}
 
 				_memory.poke(position, v1);
@@ -129,14 +131,33 @@ class Runner
 
 				var v1 = _memory.peek(position);
 
-				if (op == OpCode.JUMPEQ && v1 == v2)
+				var isTrue = op == OpCode.JUMPEQ
+					? v1 == v2
+					: v1 != v2;
+
+				if (isTrue)
 				{
 					var sectionID = _memory.peek(_position + 1);
 
 					var section = _sections.get(sectionID);
 					_position = section - 4;
 				}
-				else if (op == OpCode.JUMPNEQ && v1 != v2)
+			
+			case OpCode.JUMPL|OpCode.JUMPG|OpCode.JUMPLE|OpCode.JUMPGE:
+				var position = _memory.peek(_position + 2);
+				var v2 = _memory.peek(_position + 3);
+
+				var v1 = _memory.peek(position);
+
+				var isTrue = op == OpCode.JUMPL
+					? v1 < v2
+					: op == OpCode.JUMPG
+						? v1 > v2
+						: op == OpCode.JUMPLE
+							? v1 <= v2
+							: v1 >= v2;
+
+				if (isTrue)
 				{
 					var sectionID = _memory.peek(_position + 1);
 

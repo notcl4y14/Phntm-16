@@ -29,7 +29,7 @@ class Main
 		Browser.document.body.appendChild(canvas);
 
 		display = new Display(128, 128);
-		display.fill(Color.WHITE);
+		display.fill(Color.DARKER_BLUE);
 
 		console = new PhntmVM(0xffff);
 		console.memory.fill(0, console.memory.size, 0x0);
@@ -59,10 +59,10 @@ class Main
 
 		console.memory.poke(0x8014, OpCode.ADD);
 		console.memory.poke(0x8015, 0x0);
-		console.memory.poke(0x8016, 1);
+		console.memory.poke(0x8016, 3);
 		console.memory.poke(0x8017, 0x0);
 
-		console.memory.poke(0x8018, OpCode.JUMPNEQ);
+		console.memory.poke(0x8018, OpCode.JUMPLE);
 		console.memory.poke(0x8019, 97);
 		console.memory.poke(0x801a, 0x0);
 		console.memory.poke(0x801b, 128 * 128);
