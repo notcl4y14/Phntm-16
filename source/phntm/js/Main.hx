@@ -45,7 +45,9 @@ class Main
 		codeBuilder.add(OpCode.SYSCALL, 0x00, 0, 0);
 		
 		codeBuilder.add(OpCode.ADD, 0x000000, 3, 0);
-		codeBuilder.add(OpCode.JUMPLE, 97, 0, 128 * 128);
+		codeBuilder.add(OpCode.COMP, 0x000000, 128 * 128, 0);
+		codeBuilder.add(OpCode.JL, 97, 0, 0);
+		codeBuilder.add(OpCode.JE, 97, 0, 0);
 
 		codeBuilder.put(console.memory.data, 0x8000);
 		

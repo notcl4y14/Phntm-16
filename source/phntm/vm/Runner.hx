@@ -71,9 +71,7 @@ class Runner
 		{
 			case OpCode.JUMP:
 				var sectionID = _memory.peek(_position + 1);
-
-				var section = _sections.get(sectionID);
-				_position = section - 4;
+				_position = _sections.get(sectionID) - 4;
 
 			case OpCode.POKE:
 				var position = _memory.peek(_position + 1);
@@ -109,7 +107,7 @@ class Runner
 						display.setColorAtIndex(index, Color.getColorByID(color));
 				}
 			
-			case OpCode.ADD|OpCode.SUB|OpCode.MUL|OpCode.DIV:
+			case OpCode.ADD | OpCode.SUB | OpCode.MUL | OpCode.DIV:
 				var position = _memory.peek(_position + 1);
 				var v2 = _memory.peek(_position + 2);
 
@@ -125,44 +123,49 @@ class Runner
 
 				_memory.poke(position, v1);
 			
-			case OpCode.JUMPEQ|OpCode.JUMPNEQ:
-				var position = _memory.peek(_position + 2);
-				var v2 = _memory.peek(_position + 3);
+			case OpCode.COMP:
+				var position = _memory.peek(_position + 1);
+				var v2 = _memory.peek(_position + 2);
 
 				var v1 = _memory.peek(position);
-
-				var isTrue = op == OpCode.JUMPEQ
-					? v1 == v2
-					: v1 != v2;
-
-				if (isTrue)
+				
+				if (v1 < v2)
 				{
-					var sectionID = _memory.peek(_position + 1);
-
-					var section = _sections.get(sectionID);
-					_position = section - 4;
+					_stack.push(2);
+				}
+				else if (v1 > v2)
+				{
+					_stack.push(3);
+				}
+				else if (v1 == v2)
+				{
+					_stack.push(0);
+				}
+				else if (v1 != v2)
+				{
+					_stack.push(1);
+				}
+				else
+				{
+					_stack.push(4);
 				}
 			
-			case OpCode.JUMPL|OpCode.JUMPG|OpCode.JUMPLE|OpCode.JUMPGE:
-				var position = _memory.peek(_position + 2);
-				var v2 = _memory.peek(_position + 3);
+			case OpCode.JE | OpCode.JNE | OpCode.JL | OpCode.JG:
+				var condition = _stack.pop();
+				var isTrue = false;
 
-				var v1 = _memory.peek(position);
-
-				var isTrue = op == OpCode.JUMPL
-					? v1 < v2
-					: op == OpCode.JUMPG
-						? v1 > v2
-						: op == OpCode.JUMPLE
-							? v1 <= v2
-							: v1 >= v2;
+				switch (op)
+				{
+					case OpCode.JE: isTrue = condition == 0;
+					case OpCode.JNE: isTrue = condition == 1;
+					case OpCode.JL: isTrue = condition == 2;
+					case OpCode.JG: isTrue = condition == 3;
+				}
 
 				if (isTrue)
 				{
 					var sectionID = _memory.peek(_position + 1);
-
-					var section = _sections.get(sectionID);
-					_position = section - 4;
+					_position = _sections.get(sectionID) - 4;
 				}
 		}
 
