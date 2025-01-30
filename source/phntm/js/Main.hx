@@ -1,15 +1,7 @@
 package phntm.js;
 
-import phntm.vm.CodeBuilder;
-import phntm.vm.OpCode;
-import phntm.vm.Runner;
-import phntm.vm.PhntmVM;
 import js.Browser;
 import phntm.rendering.Display;
-import phntm.console.Console;
-import phntm.console.ConsoleBlock;
-import phntm.console.ConsoleCommand;
-import phntm.console.ConsoleRunner;
 
 class Main
 {
@@ -17,8 +9,6 @@ class Main
 	private static var context : js.html.CanvasRenderingContext2D;
 
 	private static var display : Display;
-	private static var console : PhntmVM;
-	// private static var console : Console;
 
 	public static function main () : Void
 	{
@@ -32,43 +22,8 @@ class Main
 		display = new Display(128, 128);
 		display.fill(Color.DARKER_BLUE);
 
-		console = new PhntmVM(0xffff);
-		console.memory.fill(0, console.memory.size, 0x0);
-
-		var codeBuilder : CodeBuilder = new CodeBuilder();
-
-		codeBuilder.add(OpCode.JUMP, 97, 0, 0);
-
-		codeBuilder.add(OpCode.SECTION, 97, 0, 0);
-		codeBuilder.add(OpCode.PUSH, 0x000000, 1, 0);
-		codeBuilder.add(OpCode.PUSH, 0x000000, 1, 0);
-		codeBuilder.add(OpCode.SYSCALL, 0x00, 0, 0);
-		
-		codeBuilder.add(OpCode.ADD, 0x000000, 3, 0);
-		codeBuilder.add(OpCode.COMP, 0x000000, 128 * 128, 0);
-		codeBuilder.add(OpCode.JL, 97, 0, 0);
-		codeBuilder.add(OpCode.JE, 97, 0, 0);
-
-		codeBuilder.put(console.memory.data, 0x8000);
-		
-		var runner = new Runner(0x8000, 0xffff, console.memory);
-		runner.display = display;
-		runner.process();
-		runner.run();
-
-		trace(runner);
-
 		fitCanvasToWindow();
 		applyDisplay();
-	}
-
-	private static function runConsole ()
-	{
-		// var runner : ConsoleRunner = new ConsoleRunner(console);
-		// runner.display = display;
-		// runner.section = console.code.get("main");
-
-		// runner.run();
 	}
 
 	private static function applyDisplay ()
