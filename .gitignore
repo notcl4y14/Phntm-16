@@ -1,1 +1,6 @@
-build/html5/main.js
+build
+_deps
+CMakeFiles
+*.cmake
+CMakeCache.txt
+Makefile
