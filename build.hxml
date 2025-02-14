@@ -1,6 +1,0 @@
-# Main
---class-path source
---main phntm.js.Main
-
-# Target
---js build/html5/main.js
