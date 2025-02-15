@@ -25,4 +25,6 @@
 #define P_COLOR_GRAY         CLITERAL (Color) { 86, 108, 134, 255 }
 #define P_COLOR_DARK_GRAY    CLITERAL (Color) { 51, 60, 87, 255 }
 
+Color pColorGet (int v);
+
 #endif

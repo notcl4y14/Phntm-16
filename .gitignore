@@ -1,6 +1,9 @@
-build
+# CMake files
 _deps
 CMakeFiles
-*.cmake
 CMakeCache.txt
 Makefile
+*.cmake
+
+# Misc.
+build
