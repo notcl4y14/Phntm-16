@@ -1,8 +1,8 @@
 #include "Public.h"
 #include "API.h"
 
-// RenderTexture2D* __P_API_CANVAS;
-// int __P_API_COLOR = 0;
+RenderTexture2D* __P_API_CANVAS;
+int __P_API_COLOR = 0;
 
 // Color getColor (int color)
 // {

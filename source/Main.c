@@ -14,6 +14,9 @@ void load_lua (lua_State* L)
 
 	lua_pushcfunction(L, &pLua_color);
 	lua_setglobal(L, "color");
+	
+	luaL_dostring(L, "function _init() end");
+	luaL_dostring(L, "function _tick() end");
 }
 
 int main ()
@@ -35,15 +38,30 @@ int main ()
 
 	load_lua(L);
 
-	luaL_dostring(L, "c=0\nfor i=0,256 do\ncolor(c)\nrect(i,0,i+1,256)\nc=c+1\nend");
+	char* code =
+	"w = 24\n"
+	"h = 24\n"
+	"c = 0\n"
+	"function _tick()\n"
+	"	color(c)\n"
+	"	rect(c, 128 - h / 2, c + w, 128 + h / 2)\n"
+	"	c = c + 1\n"
+	"	if c > 256 - 24 then\n"
+	"		c = 0\n"
+	"	end\n"
+	"end\n";
 
-	luaL_dostring(L, "color(13)");	
-	luaL_dostring(L, "rect(0, 0, 20, 20)");
+	luaL_dostring(L, code);
+
+	luaL_dostring(L, "_init()");
 
 	while (!WindowShouldClose())
 	{
 		BeginDrawing();
 		ClearBackground(BLACK);
+
+		luaL_dostring(L, "_tick()");
+
 		DrawTexturePro
 		(
 			canvas.texture,
