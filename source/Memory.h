@@ -16,6 +16,7 @@ P_Memory pCreateMemory(int size, int byte_size);
 void pFreeMemory(P_Memory* p);
 
 void pMemorySet(P_Memory* p, int location, P_uchar value);
+void pMemorySetOffset(P_Memory* p, int location, P_uchar value, int offset);
 P_uchar* pMemoryGet(P_Memory* p, int location);
 
 P_Memory pMemoryGetChunk(P_Memory* p, int start, int end);

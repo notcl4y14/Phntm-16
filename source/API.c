@@ -2,31 +2,9 @@
 #include "API.h"
 
 RenderTexture2D* __P_API_CANVAS;
+P_Memory* __P_API_MEMORY;
+P_Memory* __P_API_CHUNK_SCREENDATA;
 int __P_API_COLOR = 0;
-
-// Color getColor (int color)
-// {
-// 	switch (color)
-// 	{
-// 		case 0: return P_COLOR_DARKER_BLUE;
-// 		case 1: return P_COLOR_PURPLE;
-// 		case 2: return P_COLOR_RED;
-// 		case 3: return P_COLOR_ORANGE;
-// 		case 4: return P_COLOR_YELLOW;
-// 		case 5: return P_COLOR_LIME;
-// 		case 6: return P_COLOR_GREEN;
-// 		case 7: return P_COLOR_TEAL;
-// 		case 8: return P_COLOR_DARK_BLUE;
-// 		case 9: return P_COLOR_BLUE;
-// 		case 10: return P_COLOR_LIGHT_BLUE;
-// 		case 11: return P_COLOR_LIGHTER_BLUE;
-// 		case 12: return P_COLOR_WHITE;
-// 		case 13: return P_COLOR_LIGHT_GRAY;
-// 		case 14: return P_COLOR_GRAY;
-// 		case 15: return P_COLOR_DARK_GRAY;
-// 		default: return BLACK;
-// 	}
-// }
 
 int pLua_color (lua_State* L)
 {
@@ -44,9 +22,48 @@ int pLua_rect (lua_State* L)
 	int x2 = lua_tonumber(L, 3);
 	int y2 = lua_tonumber(L, 4);
 
-	BeginTextureMode(*__P_API_CANVAS);
-	DrawRectangle(x1, y1, x2 - x1, y2 - y1, pColorGet(__P_API_COLOR));
-	EndTextureMode();
+	// BeginTextureMode(*__P_API_CANVAS);
+	// DrawRectangle(x1, y1, x2 - x1, y2 - y1, pColorGet(__P_API_COLOR));
+	// EndTextureMode();
+
+	for (int x = x1; x < x2; x++)
+	{
+		for (int y = y1; y < y2; y++)
+		{
+			int location = y * 256 + x;
+			pMemorySet(__P_API_CHUNK_SCREENDATA, location, __P_API_COLOR);
+		}
+	}
+
+	return 1;
+}
+
+int pLua_peek (lua_State* L)
+{
+	int location = lua_tonumber(L, 1);
+	P_uchar* _value = pMemoryGet(__P_API_MEMORY, location);
+
+	// https://stackoverflow.com/a/17071522/22146374
+	int value = _value[0] | _value[1] << 8;
+
+	lua_pushnumber(L, value);
+
+	return 1;
+}
+
+int pLua_poke (lua_State* L)
+{
+	int location = lua_tonumber(L, 1);
+	int value = lua_tonumber(L, 2);
+
+	// https://stackoverflow.com/a/3919816/22146374
+	P_uchar v1 = (P_uchar)value;
+	P_uchar v2 = (P_uchar)(value >> 8);
+
+	// printf("%d, %d,%d\n", value, v1, v2);
+
+	pMemorySetOffset(__P_API_MEMORY, location, v1, 0);
+	pMemorySetOffset(__P_API_MEMORY, location, v2, 1);
 
 	return 1;
 }

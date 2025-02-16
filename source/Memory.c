@@ -23,6 +23,11 @@ void pMemorySet(P_Memory* p, int location, P_uchar value)
 	p->data[location * p->byte_size] = value;
 }
 
+void pMemorySetOffset(P_Memory* p, int location, P_uchar value, int offset)
+{
+	p->data[location * p->byte_size + offset] = value;
+}
+
 P_uchar* pMemoryGet(P_Memory* p, int location)
 {
 	return &p->data[location * p->byte_size];
@@ -35,7 +40,11 @@ P_Memory pMemoryGetChunk(P_Memory* p, int start, int end)
 	_p.size = end - start;
 	_p.byte_size = p->byte_size;
 	_p.count = 0;
-	_p.data = &p->data[(end - start) * _p.byte_size];
+	_p.data = &p->data[start * _p.byte_size];
+
+	// printf("%d\n", start * _p.byte_size);
+
+	// printf("%d,%d, %d\n", &p->data[0], &_p.data[0], &p->data[0] == &_p.data[0]);
 
 	return _p;
 }
