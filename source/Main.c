@@ -20,6 +20,9 @@ void load_lua (lua_State* L)
 
 	lua_pushcfunction(L, &pLua_poke);
 	lua_setglobal(L, "poke");
+
+	lua_pushcfunction(L, &pLua_spr);
+	lua_setglobal(L, "spr");
 	
 	luaL_dostring(L, "function _init() end");
 	luaL_dostring(L, "function _tick() end");
@@ -37,11 +40,11 @@ int main ()
 	
 	P_Memory memory = pCreateMemory(0xffffff, 2);
 	P_Memory chunk_screenData = pMemoryGetChunk(&memory, 0, 256 * 256);
+	P_Memory chunk_spriteData = pMemoryGetChunk(&memory, 256 * 256, (256 * 256) * 2);
 
 	__P_API_MEMORY = &memory;
 	__P_API_CHUNK_SCREENDATA = &chunk_screenData;
-
-	// printf("%d/%d, %d\n", chunk_screenData.size, memory.size, chunk_screenData.size < memory.size);
+	__P_API_CHUNK_SPRITEDATA = &chunk_spriteData;
 
 	lua_State *L = luaL_newstate();
 	luaL_openlibs(L);
@@ -49,16 +52,29 @@ int main ()
 	load_lua(L);
 
 	char* code =
-	"w = 24\n"
-	"h = 24\n"
-	"c = 0\n"
+	"-- Drawing a new sprite\n"
+	"for x=0,8 do\n"
+	"	for y=0,8 do\n"
+	"		poke((256 * 256) + (y * 8 + x), x + y)\n"
+	"	end\n"
+	"end\n"
+	"\n"
+	"offset = 4\n"
+	"count = 16\n"
+	"space = 16\n"
+	"timer = 0\n"
+	"\n"
 	"function _tick()\n"
-	"	poke(10, 12)\n"
-	"	color(c)\n"
-	"	rect(c, 128 - h / 2, c + w, 128 + h / 2)\n"
-	"	c = c + 1\n"
-	"	if c > 256 - 24 then\n"
-	"		c = 0\n"
+	"	-- Increase timer\n"
+	"	timer = timer + 0.1\n"
+	"\n"
+	"	-- Clear screen\n"
+	"	color(0)\n"
+	"	rect(0, 0, 256, 256)\n"
+	"\n"
+	"	-- Render sprites\n"
+	"	for i=1, count do\n"
+	"		spr(0, offset + i * space, (128 - 8 / 2) + math.sin(timer + i) * 8)\n"
 	"	end\n"
 	"end\n";
 
@@ -99,8 +115,6 @@ int main ()
 
 		EndDrawing();
 	}
-
-	// printf("%d, %d, %d\n", pMemoryGet(&memory, 0), pMemoryGet(&chunk_screenData, 0), pMemoryGet(&memory, 0) == pMemoryGet(&chunk_screenData, 0));
 
 	CloseWindow();
 	lua_close(L);

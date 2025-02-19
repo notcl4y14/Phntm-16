@@ -42,9 +42,5 @@ P_Memory pMemoryGetChunk(P_Memory* p, int start, int end)
 	_p.count = 0;
 	_p.data = &p->data[start * _p.byte_size];
 
-	// printf("%d\n", start * _p.byte_size);
-
-	// printf("%d,%d, %d\n", &p->data[0], &_p.data[0], &p->data[0] == &_p.data[0]);
-
 	return _p;
 }

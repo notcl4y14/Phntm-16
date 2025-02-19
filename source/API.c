@@ -4,6 +4,7 @@
 RenderTexture2D* __P_API_CANVAS;
 P_Memory* __P_API_MEMORY;
 P_Memory* __P_API_CHUNK_SCREENDATA;
+P_Memory* __P_API_CHUNK_SPRITEDATA;
 int __P_API_COLOR = 0;
 
 int pLua_color (lua_State* L)
@@ -21,10 +22,6 @@ int pLua_rect (lua_State* L)
 	int y1 = lua_tonumber(L, 2);
 	int x2 = lua_tonumber(L, 3);
 	int y2 = lua_tonumber(L, 4);
-
-	// BeginTextureMode(*__P_API_CANVAS);
-	// DrawRectangle(x1, y1, x2 - x1, y2 - y1, pColorGet(__P_API_COLOR));
-	// EndTextureMode();
 
 	for (int x = x1; x < x2; x++)
 	{
@@ -60,10 +57,26 @@ int pLua_poke (lua_State* L)
 	P_uchar v1 = (P_uchar)value;
 	P_uchar v2 = (P_uchar)(value >> 8);
 
-	// printf("%d, %d,%d\n", value, v1, v2);
-
 	pMemorySetOffset(__P_API_MEMORY, location, v1, 0);
 	pMemorySetOffset(__P_API_MEMORY, location, v2, 1);
+
+	return 1;
+}
+
+int pLua_spr (lua_State* L)
+{
+	int index = lua_tonumber(L, 1);
+	int x = lua_tonumber(L, 2);
+	int y = lua_tonumber(L, 3);
+
+	for (int _x = 0; _x < 8; _x++)
+	{
+		for (int _y = 0; _y < 8; _y++)
+		{
+			P_uchar colorIndex = *pMemoryGet(__P_API_CHUNK_SPRITEDATA, index * 64 + (_y * 8 + _x));
+			pMemorySet(__P_API_CHUNK_SCREENDATA, (y + _y) * 256 + (x + _x), colorIndex);
+		}
+	}
 
 	return 1;
 }
